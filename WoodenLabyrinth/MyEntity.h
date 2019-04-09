@@ -267,6 +267,8 @@ public:
 	*/
 	void UsePhysicsSolver(bool a_bUse = true);
 
+	void Tilt(float degree, vector3 direction);
+
 private:
 	/*
 	Usage: Deallocates member fields

@@ -1,12 +1,15 @@
 #include "MyEntity.h"
 using namespace Simplex;
+
 std::map<String, MyEntity*> MyEntity::m_IDMap;
+
 //  Accessors
 Simplex::MySolver* Simplex::MyEntity::GetSolver(void) { return m_pSolver; }
 bool Simplex::MyEntity::HasThisRigidBody(MyRigidBody* a_pRigidBody) { return m_pRigidBody == a_pRigidBody; }
 Simplex::MyRigidBody::PRigidBody* Simplex::MyEntity::GetColliderArray(void) { return m_pRigidBody->GetColliderArray(); }
 uint Simplex::MyEntity::GetCollidingCount(void) { return m_pRigidBody->GetCollidingCount(); }
 matrix4 Simplex::MyEntity::GetModelMatrix(void){ return m_m4ToWorld; }
+
 void Simplex::MyEntity::SetModelMatrix(matrix4 a_m4ToWorld)
 {
 	if (!m_bInMemory || m_m4ToWorld == a_m4ToWorld)
@@ -35,12 +38,14 @@ void Simplex::MyEntity::SetModelMatrix(matrix4 a_m4ToWorld)
 		m_pSolver->SetSize(scale);
 	}
 }
+
 Model* Simplex::MyEntity::GetModel(void){return m_pModel;}
 MyRigidBody* Simplex::MyEntity::GetRigidBody(void){	return m_pRigidBody; }
 bool Simplex::MyEntity::IsInitialized(void){ return m_bInMemory; }
 String Simplex::MyEntity::GetUniqueID(void) { return m_sUniqueID; }
 void Simplex::MyEntity::SetAxisVisible(bool a_bSetAxis) { m_bSetAxis = a_bSetAxis; }
 void Simplex::MyEntity::SetPosition(vector3 a_v3Position) { if(m_pSolver) m_pSolver->SetPosition(a_v3Position); }
+
 Simplex::vector3 Simplex::MyEntity::GetPosition(void)
 {
 	if (m_pSolver != nullptr)
@@ -334,4 +339,13 @@ void Simplex::MyEntity::ResolveCollision(MyEntity* a_pOther)
 void Simplex::MyEntity::UsePhysicsSolver(bool a_bUse)
 {
 	m_bUsePhysicsSolver = a_bUse;
+}
+
+//Tilt. Trinity Parcero. uses player input to tilt board
+//takes degree of rotation and direction of rotation as params
+//degree is how hard it rotates, direction is 3d axis the board rotates toward
+//tilts the object this is called on
+void Simplex::MyEntity::Tilt(float degree, vector3 direction) {
+	//matrix4 mSteve = glm::translate(vector3(2.25f, 0.0f, 0.0f)) * glm::rotate(IDENTITY_M4, glm::radians(-55.0f), AXIS_Z);
+	//m_pSteve->SetModelMatrix(mSteve);
 }

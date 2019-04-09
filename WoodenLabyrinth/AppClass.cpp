@@ -47,7 +47,8 @@ void Application::Update(void)
 	//Add objects to render list
 	m_pEntityMngr->AddEntityToRenderList(-1, true);
 
-	m_pMeshMngr->AddCubeToRenderList(IDENTITY_M4 * glm::scale(vector3(10.f)) , C_BROWN, RENDER_SOLID);
+	m_pMeshMngr->AddCubeToRenderList(IDENTITY_M4 * glm::scale(vector3(5.0f)) , C_BROWN, RENDER_SOLID);
+
 	m_pCameraMngr->SetPositionTargetAndUpward(
 		vector3(0.0f, 15.0f, 0.0f), //Position
 		vector3(0.0f, 0.0f, 0.5f),	//Target
