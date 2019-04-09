@@ -115,6 +115,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "E09 - ARBB", "E09 - ARBB\E0
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "E10 - EntityManager", "E10 - EntityManager\E10 - EntityManager.vcxproj", "{870B329D-6DED-48D2-8E86-0893E3BB8DAB}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WoodenLabyrinth", "WoodenLabyrinth\WoodenLabyrinth.vcxproj", "{83FE3AEA-8E81-4D18-B3B3-0392C4B1179B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -311,6 +313,10 @@ Global
 		{870B329D-6DED-48D2-8E86-0893E3BB8DAB}.Debug|x86.Build.0 = Debug|Win32
 		{870B329D-6DED-48D2-8E86-0893E3BB8DAB}.Release|x86.ActiveCfg = Release|Win32
 		{870B329D-6DED-48D2-8E86-0893E3BB8DAB}.Release|x86.Build.0 = Release|Win32
+		{83FE3AEA-8E81-4D18-B3B3-0392C4B1179B}.Debug|x86.ActiveCfg = Debug|Win32
+		{83FE3AEA-8E81-4D18-B3B3-0392C4B1179B}.Debug|x86.Build.0 = Debug|Win32
+		{83FE3AEA-8E81-4D18-B3B3-0392C4B1179B}.Release|x86.ActiveCfg = Release|Win32
+		{83FE3AEA-8E81-4D18-B3B3-0392C4B1179B}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
