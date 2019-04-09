@@ -6,26 +6,26 @@ void Application::InitVariables(void)
 
 	//Set the position and target of the camera
 	m_pCameraMngr->SetPositionTargetAndUpward(
-		vector3(0.0f, 5.0f, 25.0f), //Position
-		vector3(0.0f, 0.0f, 0.0f),	//Target
+		vector3(0.0f, 15.0f, 0.0f), //Position
+		vector3(0.0f, 0.0f, 0.5f),	//Target
 		AXIS_Y);					//Up
 
 	m_pLightMngr->SetPosition(vector3(0.0f, 3.0f, 13.0f), 1); //set the position of first light (0 is reserved for ambient light)
 
 															 
 	m_pEntityMngr = MyEntityManager::GetInstance(); //Initialize the entity manager
-	m_pEntityMngr->AddEntity("Minecraft\\Steve.obj", "Steve");
+	m_pMeshMngr = MeshManager::GetInstance();
 	m_pEntityMngr->UsePhysicsSolver();
 
 	for (int i = 0; i < 100; i++)
 	{
-		m_pEntityMngr->AddEntity("Minecraft\\Cube.obj", "Cube_" + std::to_string(i));
-		vector3 v3Position = vector3(glm::sphericalRand(12.0f));
+		/*m_pEntityMngr->AddEntity("Minecraft\\Cube.obj", "Cube_" + std::to_string(i));
+		vector3 v3Position = vector3(2 * i, );
 		v3Position.y = 0.0f;
 		matrix4 m4Position = glm::translate(v3Position);
-		m_pEntityMngr->SetModelMatrix(m4Position * glm::scale(vector3(1.5f)));
+		m_pEntityMngr->SetModelMatrix(m4Position * glm::scale(vector3(2.f)));
 		m_pEntityMngr->UsePhysicsSolver(true);
-		m_pEntityMngr->SetMass(1.5);
+		m_pEntityMngr->SetMass(1.5);*/
 
 		//m_pEntityMngr->SetMass(i+1);
 	}
@@ -36,16 +36,22 @@ void Application::Update(void)
 	m_pSystem->Update();
 
 	//Is the arcball active?
-	ArcBall();
+	//ArcBall();
 
 	//Is the first person camera active?
-	CameraRotation();
+	//CameraRotation();
 
 	//Update Entity Manager
 	m_pEntityMngr->Update();
 
 	//Add objects to render list
 	m_pEntityMngr->AddEntityToRenderList(-1, true);
+
+	m_pMeshMngr->AddCubeToRenderList(IDENTITY_M4 * glm::scale(vector3(10.f)) , C_BROWN, RENDER_SOLID);
+	m_pCameraMngr->SetPositionTargetAndUpward(
+		vector3(0.0f, 15.0f, 0.0f), //Position
+		vector3(0.0f, 0.0f, 0.5f),	//Target
+		AXIS_Y);					//Up
 }
 void Application::Display(void)
 {
