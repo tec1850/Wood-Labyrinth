@@ -6,7 +6,7 @@ void Application::InitVariables(void)
 
 	//Set the position and target of the camera
 	m_pCameraMngr->SetPositionTargetAndUpward(
-		vector3(0.0f, 15.0f, 0.0f), //Position
+		vector3(0.0f, 30.0f, 0.0f), //Position
 		vector3(0.0f, 0.0f, 0.5f),	//Target
 		AXIS_Y);					//Up
 
@@ -15,20 +15,21 @@ void Application::InitVariables(void)
 															 
 	m_pEntityMngr = MyEntityManager::GetInstance(); //Initialize the entity manager
 	m_pMeshMngr = MeshManager::GetInstance();
-	m_pEntityMngr->UsePhysicsSolver();
-
-	for (int i = 0; i < 100; i++)
+	//m_pEntityMngr->UsePhysicsSolver();
+	//m_pEntityMngr->AddEntity("cubeMesh.fbx", "Cube");
+	//m_pEntityMngr->SetModelMatrix(IDENTITY_M4 * glm::translate(vector3(0.f, 10.f, 0.f)));
+	for (int i = 0; i < 15; i++)
 	{
-		/*m_pEntityMngr->AddEntity("Minecraft\\Cube.obj", "Cube_" + std::to_string(i));
-		vector3 v3Position = vector3(2 * i, );
-		v3Position.y = 0.0f;
-		matrix4 m4Position = glm::translate(v3Position);
-		m_pEntityMngr->SetModelMatrix(m4Position * glm::scale(vector3(2.f)));
-		m_pEntityMngr->UsePhysicsSolver(true);
-		m_pEntityMngr->SetMass(1.5);*/
-
-		//m_pEntityMngr->SetMass(i+1);
+		for (int j = 0; j < 15; j++)
+		{
+			m_pEntityMngr->AddEntity("cubeMesh.fbx");
+			vector3 v3Position = vector3(-7.5 + i, 10, -7.5 + j);
+			matrix4 m4Pos = glm::translate(v3Position);
+			m_pEntityMngr->SetModelMatrix(m4Pos);
+		}
 	}
+
+	m_pEntityMngr->Update();
 }
 void Application::Update(void)
 {
@@ -49,7 +50,7 @@ void Application::Update(void)
 
 	m_pMeshMngr->AddCubeToRenderList(IDENTITY_M4 * glm::scale(vector3(10.f)) , C_BROWN, RENDER_SOLID);
 	m_pCameraMngr->SetPositionTargetAndUpward(
-		vector3(0.0f, 15.0f, 0.0f), //Position
+		vector3(0.0f, 30.0f, 0.0f), //Position
 		vector3(0.0f, 0.0f, 0.5f),	//Target
 		AXIS_Y);					//Up
 }
