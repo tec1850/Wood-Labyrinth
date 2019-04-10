@@ -32,8 +32,7 @@ void Application::InitVariables(void)
 	}
 
 	//addes sphere
-	//need to add sphere.fbx
-	m_pEntityMngr->AddEntity("cubeMesh.fbx");
+	m_pEntityMngr->AddEntity("sphere.fbx");
 	vector3 v3Position = vector3(-.5, 12, -.5);
 	matrix4 m4Pos = glm::translate(v3Position);
 	m_pEntityMngr->SetModelMatrix(m4Pos);
