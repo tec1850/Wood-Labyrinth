@@ -2,7 +2,7 @@
 using namespace Simplex;
 void Application::InitVariables(void)
 {
-	m_sProgrammer = "Alberto Bobadilla - labigm@rit.edu";
+	m_sProgrammer = "TEAM BACKROW";
 
 	//Set the position and target of the camera
 	m_pCameraMngr->SetPositionTargetAndUpward(
@@ -18,6 +18,8 @@ void Application::InitVariables(void)
 	//m_pEntityMngr->UsePhysicsSolver();
 	//m_pEntityMngr->AddEntity("cubeMesh.fbx", "Cube");
 	//m_pEntityMngr->SetModelMatrix(IDENTITY_M4 * glm::translate(vector3(0.f, 10.f, 0.f)));
+
+	//adds squares on bottom
 	for (int i = 0; i < 15; i++)
 	{
 		for (int j = 0; j < 15; j++)
@@ -28,6 +30,13 @@ void Application::InitVariables(void)
 			m_pEntityMngr->SetModelMatrix(m4Pos);
 		}
 	}
+
+	//addes sphere
+	//need to add sphere.fbx
+	m_pEntityMngr->AddEntity("cubeMesh.fbx");
+	vector3 v3Position = vector3(-.5, 12, -.5);
+	matrix4 m4Pos = glm::translate(v3Position);
+	m_pEntityMngr->SetModelMatrix(m4Pos);
 
 	m_pEntityMngr->Update();
 }
@@ -53,6 +62,14 @@ void Application::Update(void)
 		vector3(0.0f, 30.0f, 0.0f), //Position
 		vector3(0.0f, 0.0f, 0.5f),	//Target
 		AXIS_Y);					//Up
+
+	//might have to add another ^^ for the sphere when added in
+
+
+	//gravity goes here?
+	//could use ApplyForce in MyEntity
+	//->ApplyForce(vector3(0.0f,-3.0f,0.0f));
+
 }
 void Application::Display(void)
 {
