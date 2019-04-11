@@ -32,12 +32,16 @@ void Application::InitVariables(void)
 	}
 
 	//addes sphere
-	m_pEntityMngr->AddEntity("sphere.fbx");
-	vector3 v3Position = vector3(-.5, 12, -.5);
+	m_pBall = new MyEntity("sphere.fbx");
+	
+	//m_pBall->SetMass(1.0f);
+	m_pBall->UsePhysicsSolver(true);
+	vector3 v3Position = vector3(-.5, 25, -.5);
 	matrix4 m4Pos = glm::translate(v3Position);
-	m_pEntityMngr->SetModelMatrix(m4Pos);
+	m_pBall->SetModelMatrix(m4Pos);
 
 	m_pEntityMngr->Update();
+	m_pBall->Update();
 }
 void Application::Update(void)
 {
@@ -52,9 +56,14 @@ void Application::Update(void)
 
 	//Update Entity Manager
 	m_pEntityMngr->Update();
+	m_pBall->Update();
+
+	std::cout << (m_pBall->GetPosition().y);
 
 	//Add objects to render list
 	m_pEntityMngr->AddEntityToRenderList(-1, true);
+	m_pBall->AddToRenderList(true);
+	
 	
 	//m_pMeshMngr->AddCubeToRenderList(glm::rotate(IDENTITY_M4, static_cast<float>(PI / 2.0f), glm::vec3(0.0f, 0.0f, 1.0f)) * glm::scale(vector3(10.f)) , C_BROWN, RENDER_SOLID);
 	m_pMeshMngr->AddCubeToRenderList(IDENTITY_M4 * glm::scale(vector3(10.f)), C_BROWN, RENDER_SOLID); //is this necessary? commented it out and nothing changed
@@ -62,13 +71,6 @@ void Application::Update(void)
 		vector3(0.0f, 30.0f, 0.0f), //Position
 		vector3(0.0f, 0.0f, 0.5f),	//Target
 		AXIS_Y);					//Up
-
-	//might have to add another ^^ for the sphere when added in
-
-
-	//gravity goes here?
-	//could use ApplyForce in MyEntity
-	//->ApplyForce(vector3(0.0f,-3.0f,0.0f));
 
 }
 void Application::Display(void)

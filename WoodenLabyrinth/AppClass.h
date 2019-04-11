@@ -18,6 +18,7 @@ namespace Simplex
 class Application
 {
 	MyEntityManager* m_pEntityMngr = nullptr; //Entity Manager
+	MyEntity* m_pBall = nullptr;
 
 private:
 	static ImGuiObject gui; //GUI object
