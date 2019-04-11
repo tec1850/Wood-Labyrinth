@@ -179,10 +179,10 @@ void Simplex::MyEntityManager::Update(void)
 		for (uint j = i + 1; j < m_uEntityCount; j++)
 		{
 			//if objects are colliding resolve the collision
-			if (m_mEntityArray[i]->IsColliding(m_mEntityArray[j]))
+			/*if (m_mEntityArray[i]->IsColliding(m_mEntityArray[j]))
 			{
 				m_mEntityArray[i]->ResolveCollision(m_mEntityArray[j]);
-			}
+			}*/
 		}
 		//Update each entity
 		m_mEntityArray[i]->Update();
