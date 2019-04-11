@@ -1,5 +1,5 @@
 #include "AppClass.h"
-using namespace Simplex;
+using namespace Simplex; //10.0.17763.0 - lab sdk version
 void Application::InitVariables(void)
 {
 	m_sProgrammer = "TEAM BACKROW";
@@ -55,8 +55,9 @@ void Application::Update(void)
 
 	//Add objects to render list
 	m_pEntityMngr->AddEntityToRenderList(-1, true);
-
-	m_pMeshMngr->AddCubeToRenderList(IDENTITY_M4 * glm::scale(vector3(10.f)) , C_BROWN, RENDER_SOLID);
+	
+	//m_pMeshMngr->AddCubeToRenderList(glm::rotate(IDENTITY_M4, static_cast<float>(PI / 2.0f), glm::vec3(0.0f, 0.0f, 1.0f)) * glm::scale(vector3(10.f)) , C_BROWN, RENDER_SOLID);
+	m_pMeshMngr->AddCubeToRenderList(IDENTITY_M4 * glm::scale(vector3(10.f)), C_BROWN, RENDER_SOLID); //is this necessary? commented it out and nothing changed
 	m_pCameraMngr->SetPositionTargetAndUpward(
 		vector3(0.0f, 30.0f, 0.0f), //Position
 		vector3(0.0f, 0.0f, 0.5f),	//Target
