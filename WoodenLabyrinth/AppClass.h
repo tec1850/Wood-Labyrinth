@@ -30,7 +30,7 @@ private:
 	uint m_uRenderCallCount = 0; //count of render calls per frame
 	uint m_uControllerCount = 0; //count of controllers connected
 
-	String m_sProgrammer = "Alberto Bobadilla - labigm@rit.edu";
+	String m_sProgrammer = "Team Backrow";
 
 	bool m_bFocused = true; //is the window focused?
 

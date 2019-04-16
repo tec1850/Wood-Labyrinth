@@ -1,4 +1,6 @@
 #include "AppClass.h"
+#include <iostream>
+#include <fstream>
 using namespace Simplex; //10.0.17763.0 - lab sdk version
 void Application::InitVariables(void)
 {
@@ -18,6 +20,40 @@ void Application::InitVariables(void)
 	//m_pEntityMngr->UsePhysicsSolver();
 	//m_pEntityMngr->AddEntity("cubeMesh.fbx", "Cube");
 	//m_pEntityMngr->SetModelMatrix(IDENTITY_M4 * glm::translate(vector3(0.f, 10.f, 0.f)));
+
+	//grab the .dat folder
+	std::ifstream m_fTheFile("labData.dat");
+	std::string line;
+	char fullFile[1000];
+	char data[226];
+
+	uint index = 0;
+	uint fullFileLength = 0;
+
+	if (m_fTheFile.is_open())
+	{
+		while (std::getline(m_fTheFile, line))
+		{
+			for (uint i = 0; i < line.length; i++)
+			{
+				fullFile[i * index] = line[i];
+				fullFileLength += 1;
+			}
+			index++;
+		}
+	}
+	m_fTheFile.close();
+
+	index = 0;
+
+	for (uint i = 0; i < fullFileLength; i++)
+	{
+		if (!isspace(fullFile[i]))
+		{
+			data[index] = fullFile[i];
+			index++;
+		}
+	}
 
 	//adds squares on bottom
 	for (int i = 0; i < 15; i++)
