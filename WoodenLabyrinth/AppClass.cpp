@@ -22,10 +22,10 @@ void Application::InitVariables(void)
 	//m_pEntityMngr->SetModelMatrix(IDENTITY_M4 * glm::translate(vector3(0.f, 10.f, 0.f)));
 
 	//grab the .dat folder
-	std::ifstream m_fTheFile("labData.dat");
+	std::ifstream m_fTheFile;
+	m_fTheFile.open("labData.txt", std::ios_base::in | std::ios_base::binary);
 	std::string line;
-	char fullFile[1000];
-	char data[226];
+	char data[1000];
 
 	uint index = 0;
 	uint fullFileLength = 0;
@@ -34,36 +34,36 @@ void Application::InitVariables(void)
 	{
 		while (std::getline(m_fTheFile, line))
 		{
-			for (uint i = 0; i < line.length; i++)
+			for (uint i = 0; i < line.length(); i++)
 			{
-				fullFile[i * index] = line[i];
-				fullFileLength += 1;
+				if (isspace(line[i]))
+				{
+
+				}
+				else
+				{
+					data[i * index] = line[i];
+					fullFileLength += 1;
+				}
 			}
 			index++;
 		}
 	}
 	m_fTheFile.close();
 
-	index = 0;
-
-	for (uint i = 0; i < fullFileLength; i++)
-	{
-		if (!isspace(fullFile[i]))
-		{
-			data[index] = fullFile[i];
-			index++;
-		}
-	}
-
 	//adds squares on bottom
 	for (int i = 0; i < 15; i++)
 	{
 		for (int j = 0; j < 15; j++)
 		{
-			m_pEntityMngr->AddEntity("cubeMesh.fbx");
-			vector3 v3Position = vector3(-7.5 + i, 10, -7.5 + j);
-			matrix4 m4Pos = glm::translate(v3Position);
-			m_pEntityMngr->SetModelMatrix(m4Pos);
+			std::cout << data[((15 * i) + j)] << std::endl;
+			if (data[((15 * i) + j)] == '0')
+			{
+				m_pEntityMngr->AddEntity("cubeMesh.fbx");
+				vector3 v3Position = vector3(-7.5 + i, 10, -7.5 + j);
+				matrix4 m4Pos = glm::translate(v3Position);
+				m_pEntityMngr->SetModelMatrix(m4Pos);
+			}
 		}
 	}
 
@@ -94,7 +94,7 @@ void Application::Update(void)
 	m_pEntityMngr->Update();
 	m_pBall->Update();
 
-	std::cout << (m_pBall->GetPosition().y);
+	//std::cout << (m_pBall->GetPosition().y);
 
 	//Add objects to render list
 	m_pEntityMngr->AddEntityToRenderList(-1, true);
