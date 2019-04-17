@@ -23,7 +23,7 @@ void Application::InitVariables(void)
 
 	//grab the .dat folder
 	std::ifstream m_fTheFile;
-	m_fTheFile.open("labData.txt", std::ios_base::in | std::ios_base::binary);
+	m_fTheFile.open("labData.dat", std::ios_base::in | std::ios_base::binary);
 	std::string line;
 	char data[1000];
 
@@ -94,15 +94,27 @@ void Application::Update(void)
 	m_pEntityMngr->Update();
 	m_pBall->Update();
 
+	uint numCubes = m_pEntityMngr->GetEntityCount();
+
+	for (uint i = 0; i < numCubes; i++)
+	{
+		MyEntity* temp = m_pEntityMngr->GetEntity(i);
+		if (m_pBall->IsColliding(temp))
+		{
+			m_pBall->GetSolver()->ApplyForce(vector3(0.0f, -0.12f, 0.0f));
+		}
+	}
+
 	//std::cout << (m_pBall->GetPosition().y);
 
 	//Add objects to render list
 	m_pEntityMngr->AddEntityToRenderList(-1, true);
 	m_pBall->AddToRenderList(true);
+
+	//m_pBall.
 	
 	
-	//m_pMeshMngr->AddCubeToRenderList(glm::rotate(IDENTITY_M4, static_cast<float>(PI / 2.0f), glm::vec3(0.0f, 0.0f, 1.0f)) * glm::scale(vector3(10.f)) , C_BROWN, RENDER_SOLID);
-	m_pMeshMngr->AddCubeToRenderList(IDENTITY_M4 * glm::scale(vector3(10.f)), C_BROWN, RENDER_SOLID); //is this necessary? commented it out and nothing changed
+	m_pMeshMngr->AddCubeToRenderList(IDENTITY_M4 * glm::scale(vector3(10.f)), C_BROWN, RENDER_SOLID);
 	m_pCameraMngr->SetPositionTargetAndUpward(
 		vector3(0.0f, 30.0f, 0.0f), //Position
 		vector3(0.0f, 0.0f, 0.5f),	//Target
