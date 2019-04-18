@@ -23,12 +23,9 @@ void Application::InitVariables(void)
 
 	//grab the .dat folder
 	std::ifstream m_fTheFile;
-	m_fTheFile.open("labData.dat", std::ios_base::in | std::ios_base::binary);
+	m_fTheFile.open("labData.txt", std::ios_base::in | std::ios_base::binary);
 	std::string line;
-	char data[1000];
-
-	uint index = 0;
-	uint fullFileLength = 0;
+	char* data = new char[1000];
 
 	if (m_fTheFile.is_open())
 	{
@@ -36,31 +33,36 @@ void Application::InitVariables(void)
 		{
 			for (uint i = 0; i < line.length(); i++)
 			{
-				if (isspace(line[i]))
-				{
-
-				}
-				else
-				{
-					data[i * index] = line[i];
-					fullFileLength += 1;
-				}
+				std::cout << "Current index value: " << line[i] << std::endl;
+				data[i] = line[i];
 			}
-			index++;
 		}
 	}
 	m_fTheFile.close();
 
-	//adds squares on bottom
+	//base floor thing
 	for (int i = 0; i < 15; i++)
 	{
 		for (int j = 0; j < 15; j++)
 		{
-			std::cout << data[((15 * i) + j)] << std::endl;
-			if (data[((15 * i) + j)] == '0')
+			m_pEntityMngr->AddEntity("cubeMesh.fbx", "base_" + i + j);
+			vector3 v3Position = vector3(-7.5 + i, 10, -7.5 + j);
+			matrix4 m4Pos = glm::translate(v3Position);
+			m_pEntityMngr->SetModelMatrix(m4Pos);
+		}
+	}
+
+	//adds squares on top
+	for (int i = 0; i < 15; i++)
+	{
+		for (int j = 0; j < 15; j++)
+		{
+			uint num = (15 * i) + j;
+			std::cout << data[num] << std::endl;
+			if (data[num] == '0')
 			{
 				m_pEntityMngr->AddEntity("cubeMesh.fbx");
-				vector3 v3Position = vector3(-7.5 + i, 10, -7.5 + j);
+				vector3 v3Position = vector3(-7.5 + i, 11, -7.5 + j);
 				matrix4 m4Pos = glm::translate(v3Position);
 				m_pEntityMngr->SetModelMatrix(m4Pos);
 			}
@@ -74,7 +76,7 @@ void Application::InitVariables(void)
 	m_pBall->UsePhysicsSolver(true);
 	vector3 v3Position = vector3(-.5, 25, -.5);
 	matrix4 m4Pos = glm::translate(v3Position);
-	m_pBall->SetModelMatrix(m4Pos);
+	m_pBall->SetModelMatrix(m4Pos * glm::scale(vector3(0.2f)));
 
 	m_pEntityMngr->Update();
 	m_pBall->Update();
@@ -85,10 +87,10 @@ void Application::Update(void)
 	m_pSystem->Update();
 
 	//Is the arcball active?
-	//ArcBall();
+	ArcBall();
 
 	//Is the first person camera active?
-	//CameraRotation();
+	CameraRotation();
 
 	//Update Entity Manager
 	m_pEntityMngr->Update();
@@ -112,13 +114,11 @@ void Application::Update(void)
 	m_pBall->AddToRenderList(true);
 
 	//m_pBall.
-	
-	
-	m_pMeshMngr->AddCubeToRenderList(IDENTITY_M4 * glm::scale(vector3(10.f)), C_BROWN, RENDER_SOLID);
-	m_pCameraMngr->SetPositionTargetAndUpward(
-		vector3(0.0f, 30.0f, 0.0f), //Position
-		vector3(0.0f, 0.0f, 0.5f),	//Target
-		AXIS_Y);					//Up
+	  
+	//m_pCameraMngr->SetPositionTargetAndUpward(
+	//	vector3(0.0f, 30.0f, 0.0f), //Position
+	//	vector3(0.0f, 0.0f, 0.5f),	//Target
+	//	AXIS_Y);					//Up
 
 }
 void Application::Display(void)
