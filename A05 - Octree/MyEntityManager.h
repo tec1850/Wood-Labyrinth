@@ -277,11 +277,6 @@ private:
 	Output: ---
 	*/
 	void Release(void);
-	/*
-	Usage: initializes the singleton
-	Arguments: ---
-	Output: ---
-	*/
 	void Init(void);
 };//class
 
