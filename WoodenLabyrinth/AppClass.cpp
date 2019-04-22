@@ -49,7 +49,7 @@ void Application::InitVariables(void)
 	{
 		for (int j = 0; j < 15; j++)
 		{
-			m_pEntityMngr->AddEntity("cubeMesh.fbx", "base_" + i + j);
+			m_pEntityMngr->AddEntity("baseCube.fbx", "base_" + i + j);
 			vector3 v3Position = vector3(-7.5 + i, 10, -7.5 + j);
 			matrix4 m4Pos = glm::translate(v3Position);
 			m_pEntityMngr->SetModelMatrix(m4Pos);
@@ -70,17 +70,21 @@ void Application::InitVariables(void)
 				matrix4 m4Pos = glm::translate(v3Position);
 				m_pEntityMngr->SetModelMatrix(m4Pos);
 			}
+
+			if (data[num] == '2')
+			{
+				m_pBall = new MyEntity("sphere.fbx");
+				m_pBall->UsePhysicsSolver(true);
+				vector3 v3Position = vector3(-7.5 + i, 25, -7.5 + j);
+				matrix4 m4Pos = glm::translate(v3Position);
+				m_pBall->SetModelMatrix(m4Pos * glm::scale(vector3(0.2f)));
+			}
 		}
 	}
 
-	//adds sphere
-	m_pBall = new MyEntity("sphere.fbx");
-	
+	//adds sphere	
 	//m_pBall->SetMass(1.0f);
-	m_pBall->UsePhysicsSolver(true);
-	vector3 v3Position = vector3(-.5, 25, -.5);
-	matrix4 m4Pos = glm::translate(v3Position);
-	m_pBall->SetModelMatrix(m4Pos * glm::scale(vector3(0.2f)));
+	
 
 	m_pEntityMngr->Update();
 	m_pBall->Update();
@@ -157,15 +161,15 @@ void Application::Release(void)
 
 void Application::ProcessInput(MyEntity* ball) {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-		ball->PushBall(vector3(0.0f, 0.0f, 0.001f));
+		ball->PushBall(vector3(0.0f, 0.0f, 0.0001f));
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-		ball->PushBall(vector3(0.0f, 0.0f, -0.001f));
+		ball->PushBall(vector3(0.0f, 0.0f, -0.0001f));
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-		ball->PushBall(vector3(0.001f, 0.0f, 0.0f));
+		ball->PushBall(vector3(0.0001f, 0.0f, 0.0f));
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-		ball->PushBall(vector3(-0.001f, 0.0f, 0.0f));
+		ball->PushBall(vector3(-0.0001f, 0.0f, 0.0f));
 	}
 }
