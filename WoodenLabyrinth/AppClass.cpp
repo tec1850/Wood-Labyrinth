@@ -157,15 +157,15 @@ void Application::Release(void)
 
 void Application::ProcessInput(MyEntity* ball) {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-		ball->PushBall(vector3(0.0f, 0.0f, 1.0f));
+		ball->PushBall(vector3(0.0f, 0.0f, 0.01f));
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-		ball->PushBall(vector3(0.0f, 0.0f, -1.0f));
+		ball->PushBall(vector3(0.0f, 0.0f, -0.01f));
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-		ball->PushBall(vector3(-1.0f, 0.0f, 0.0f));
+		ball->PushBall(vector3(0.01f, 0.0f, 0.0f));
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-		ball->PushBall(vector3(1.0f, 0.0f, 0.0f));
+		ball->PushBall(vector3(-0.01f, 0.0f, 0.0f));
 	}
 }

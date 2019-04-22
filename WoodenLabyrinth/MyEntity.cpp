@@ -344,5 +344,6 @@ void Simplex::MyEntity::UsePhysicsSolver(bool a_bUse)
 //push ball. uses ApplyForce for realistic movement. called on input
 //takes vector3 inputDirection. 
 void MyEntity::PushBall(vector3 inputDir) {
+	
 	this->ApplyForce(inputDir);
 }
