@@ -58,6 +58,10 @@ public:
 	Output: ---
 	*/
 	~MyEntity(void);
+
+	//Trin Parcero. moves ball based on input
+	void PushBall(vector3 inputDir);
+
 	/*
 	Usage: Changes object contents for other object's
 	Arguments: other -> object to swap content from
@@ -267,7 +271,6 @@ public:
 	*/
 	void UsePhysicsSolver(bool a_bUse = true);
 
-	void Tilt(float degree, vector3 direction);
 
 private:
 	/*

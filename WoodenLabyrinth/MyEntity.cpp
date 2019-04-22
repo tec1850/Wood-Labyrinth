@@ -341,11 +341,8 @@ void Simplex::MyEntity::UsePhysicsSolver(bool a_bUse)
 	m_bUsePhysicsSolver = a_bUse;
 }
 
-//Tilt. Trinity Parcero. uses player input to tilt board
-//takes degree of rotation and direction of rotation as params
-//degree is how hard it rotates, direction is 3d axis the board rotates toward
-//tilts the object this is called on
-void Simplex::MyEntity::Tilt(float degree, vector3 direction) {
-	//matrix4 mSteve = glm::translate(vector3(2.25f, 0.0f, 0.0f)) * glm::rotate(IDENTITY_M4, glm::radians(-55.0f), AXIS_Z);
-	//m_pSteve->SetModelMatrix(mSteve);
+//push ball. uses ApplyForce for realistic movement. called on input
+//takes vector3 inputDirection. 
+void MyEntity::PushBall(vector3 inputDir) {
+	this->ApplyForce(inputDir);
 }
