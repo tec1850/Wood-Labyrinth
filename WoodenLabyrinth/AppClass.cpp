@@ -3,9 +3,8 @@
 #include <fstream>
 using namespace Simplex; //10.0.17763.0 - lab sdk version
 
-//Trin. need this outside a method so we can access it
-//inside the processInput method
-MyEntity m_pBall;
+
+
 
 void Application::InitVariables(void)
 {
@@ -95,7 +94,7 @@ void Application::Update(void)
 	ArcBall();
 
 	//check for input
-	ProcessInput();
+	ProcessInput(m_pBall);
 
 	//Is the first person camera active?
 	CameraRotation();
@@ -156,17 +155,17 @@ void Application::Release(void)
 	ShutdownGUI();
 }
 
-void ProcessInput() {
+void Application::ProcessInput(MyEntity* ball) {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-		m_pBall.PushBall(vector3(0.0f, 0.0f, 1.0f));
+		ball->PushBall(vector3(0.0f, 0.0f, 1.0f));
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-		m_pBall.PushBall(vector3(0.0f, 0.0f, -1.0f));
+		ball->PushBall(vector3(0.0f, 0.0f, -1.0f));
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-		m_pBall.PushBall(vector3(-1.0f, 0.0f, 0.0f));
+		ball->PushBall(vector3(-1.0f, 0.0f, 0.0f));
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-		m_pBall.PushBall(vector3(1.0f, 0.0f, 0.0f));
+		ball->PushBall(vector3(1.0f, 0.0f, 0.0f));
 	}
 }
