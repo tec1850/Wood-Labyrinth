@@ -134,6 +134,7 @@ private:
 	OUTPUT: ---
 	*/
 	void Release(void);
+	void ProcessInput(MyEntity * ball);
 #pragma endregion
 
 #pragma region Main Loop
