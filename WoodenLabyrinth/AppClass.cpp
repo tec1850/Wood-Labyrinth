@@ -29,7 +29,7 @@ void Application::InitVariables(void)
 	std::ifstream m_fTheFile;
 	m_fTheFile.open("labData.txt", std::ios_base::in | std::ios_base::binary);
 	std::string line;
-	char* data = new char[1000];
+	data = new char[100000];
 
 	if (m_fTheFile.is_open())
 	{
@@ -50,9 +50,9 @@ void Application::InitVariables(void)
 		for (int j = 0; j < 15; j++)
 		{
 			m_pEntityMngr->AddEntity("baseCube.fbx", "base_" + i + j);
-			vector3 v3Position = vector3(-7.5 + i, 10, -7.5 + j);
+			vector3 v3Position = vector3(-7.5 + (i * 5), 10, -7.5 + (j * 5));
 			matrix4 m4Pos = glm::translate(v3Position);
-			m_pEntityMngr->SetModelMatrix(m4Pos);
+			m_pEntityMngr->SetModelMatrix(m4Pos * glm::scale(vector3(5.f)));
 		}
 	}
 
@@ -66,16 +66,16 @@ void Application::InitVariables(void)
 			if (data[num] == '0')
 			{
 				m_pEntityMngr->AddEntity("cubeMesh.fbx");
-				vector3 v3Position = vector3(-7.5 + i, 11, -7.5 + j);
+				vector3 v3Position = vector3(-7.5 + (i * 5), 11, -7.5 + (j * 5));
 				matrix4 m4Pos = glm::translate(v3Position);
-				m_pEntityMngr->SetModelMatrix(m4Pos);
+				m_pEntityMngr->SetModelMatrix(m4Pos * glm::scale(vector3(5.f)));
 			}
 
 			if (data[num] == '2')
 			{
 				m_pBall = new MyEntity("sphere.fbx");
 				m_pBall->UsePhysicsSolver(true);
-				vector3 v3Position = vector3(-7.5 + i, 25, -7.5 + j);
+				vector3 v3Position = vector3(-7.5 + (i * 5), 25, -7.5 + (j * 5));
 				matrix4 m4Pos = glm::translate(v3Position);
 				m_pBall->SetModelMatrix(m4Pos * glm::scale(vector3(0.2f)));
 			}
@@ -85,6 +85,9 @@ void Application::InitVariables(void)
 	//adds sphere	
 	//m_pBall->SetMass(1.0f);
 	
+
+	m_uOctantLevels = 1;
+	m_pRoot = new MyOctant(m_uOctantLevels, 5);
 
 	m_pEntityMngr->Update();
 	m_pBall->Update();
@@ -123,8 +126,6 @@ void Application::Update(void)
 	//Add objects to render list
 	m_pEntityMngr->AddEntityToRenderList(-1, true);
 	m_pBall->AddToRenderList(true);
-
-	//m_pBall.
 	  
 	//m_pCameraMngr->SetPositionTargetAndUpward(
 	//	vector3(0.0f, 30.0f, 0.0f), //Position
@@ -139,6 +140,9 @@ void Application::Display(void)
 	
 	// draw a skybox
 	m_pMeshMngr->AddSkyboxToRenderList();
+
+	//draw octree
+	m_pRoot->Display();
 		
 	//render list call
 	m_uRenderCallCount = m_pMeshMngr->Render();
@@ -156,6 +160,7 @@ void Application::Display(void)
 void Application::Release(void)
 {
 	//release GUI
+	delete[] data;
 	ShutdownGUI();
 }
 

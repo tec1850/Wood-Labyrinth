@@ -367,7 +367,6 @@ void MyOctant::ConstructList(void){
 		}
 	}
 	if(m_EntityList.size() > 0){
-		if(m_pRoot)
-			m_pRoot->m_lChild.push_back(this);
+		m_pParent->m_lChild.push_back(this);
 	}
 }
