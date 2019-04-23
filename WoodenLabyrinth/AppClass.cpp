@@ -67,7 +67,7 @@ void Application::InitVariables(void)
 			if (data[num] == '0')
 			{
 				m_pEntityMngr->AddEntity("cubeMesh.fbx");
-				vector3 v3Position = vector3(-7.5 + (i * 5), 15, -7.5 + (j * 5));
+				vector3 v3Position = vector3(-7.5 + (i * 5), 13, -7.5 + (j * 5));
 				matrix4 m4Pos = glm::translate(v3Position);
 				m_pEntityMngr->SetModelMatrix(m4Pos * glm::scale(vector3(5.f)));
 			}
@@ -148,16 +148,30 @@ void Application::Update(void)
 		if (isColliding)
 		{
 			//m_pBall->UsePhysicsSolver(false);
-			if (m_pBall->GetPosition().y > temp->GetPosition().y)
+			if (m_pBall->GetRigidBody()->GetMaxGlobal().y > temp->GetRigidBody()->GetMaxGlobal().y)
 			{
 				m_pBall->GetSolver()->ApplyForce(vector3(0.0f, -(m_pBall->GetSolver()->GetVelocity().y + -0.001f), 0.0f));
-				
 			}
-			/*else if (m_pBall->GetPosition().x > temp->GetPosition().x && m_pBall->GetSolver()->GetVelocity().x > 0.0f)
+			else 
 			{
 				std::cout << "collision" << std::endl;
-				m_pBall->GetSolver()->ApplyForce(vector3(-(m_pBall->GetSolver()->GetVelocity().x + 0.0001f), 0.0f, 0.0f));
-			}*/
+				if (m_pBall->GetRigidBody()->GetMinGlobal().x < temp->GetRigidBody()->GetMinGlobal().x && m_pBall->GetSolver()->GetVelocity().x > 0.0f)
+				{
+					m_pBall->GetSolver()->ApplyForce(vector3(-(m_pBall->GetSolver()->GetVelocity().x + 0.0001f), 0.0f, 0.0f));
+				}
+				if (m_pBall->GetRigidBody()->GetMaxGlobal().x > temp->GetRigidBody()->GetMaxGlobal().x && m_pBall->GetSolver()->GetVelocity().x < 0.0f)
+				{
+					m_pBall->GetSolver()->ApplyForce(vector3(-(m_pBall->GetSolver()->GetVelocity().x + -0.0001f), 0.0f, 0.0f));
+				}
+				if (m_pBall->GetRigidBody()->GetMinGlobal().z < temp->GetRigidBody()->GetMinGlobal().z && m_pBall->GetSolver()->GetVelocity().z > 0.0f)
+				{
+					m_pBall->GetSolver()->ApplyForce(vector3(0.0f, 0.0f, -(m_pBall->GetSolver()->GetVelocity().z + 0.0001f)));
+				}
+				if (m_pBall->GetRigidBody()->GetMaxGlobal().z > temp->GetRigidBody()->GetMaxGlobal().z && m_pBall->GetSolver()->GetVelocity().z < 0.0f)
+				{
+					m_pBall->GetSolver()->ApplyForce(vector3(0.0f, 0.0f, -(m_pBall->GetSolver()->GetVelocity().z + -0.0001f)));
+				}
+			}
 		}
 	}
 
