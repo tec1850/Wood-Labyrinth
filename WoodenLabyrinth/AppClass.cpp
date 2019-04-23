@@ -13,7 +13,7 @@ void Application::InitVariables(void)
 
 	//Set the position and target of the camera
 	m_pCameraMngr->SetPositionTargetAndUpward(
-		vector3(0.0f, 30.0f, 0.0f), //Position
+		vector3(0.0f, 100.0f, 0.0f), //Position
 		vector3(0.0f, 0.0f, 0.5f),	//Target
 		AXIS_Y);					//Up
 
@@ -51,7 +51,7 @@ void Application::InitVariables(void)
 		for (int j = 0; j < 15; j++)
 		{
 			m_pEntityMngr->AddEntity("baseCube.fbx", "base_" + i + j);
-			vector3 v3Position = vector3(-7.5 + (i * 5), 10, -7.5 + (j * 5));
+			vector3 v3Position = vector3(-37.5 + (i * 5), 10, -37.5 + (j * 5));
 			matrix4 m4Pos = glm::translate(v3Position);
 			m_pEntityMngr->SetModelMatrix(m4Pos * glm::scale(vector3(5.f)));
 		}
@@ -67,7 +67,7 @@ void Application::InitVariables(void)
 			if (data[num] == '0')
 			{
 				m_pEntityMngr->AddEntity("cubeMesh.fbx");
-				vector3 v3Position = vector3(-7.5 + (i * 5), 15, -7.5 + (j * 5));
+				vector3 v3Position = vector3(-37.5 + (i * 5), 15, -37.5 + (j * 5));
 				matrix4 m4Pos = glm::translate(v3Position);
 				m_pEntityMngr->SetModelMatrix(m4Pos * glm::scale(vector3(5.f)));
 			}
@@ -76,17 +76,21 @@ void Application::InitVariables(void)
 			{
 				m_pBall = new MyEntity("sphere.fbx");
 				m_pBall->UsePhysicsSolver(true);
-				vector3 v3Position = vector3(-7.5 + (i * 5), 15, -7.5 + (j * 5));
+				vector3 v3Position = vector3(-37.5 + (i * 5), 15, -37.5 + (j * 5));
 				matrix4 m4Pos = glm::translate(v3Position);
 				m_pBall->SetModelMatrix(m4Pos * glm::scale(vector3(0.4f)));
+			}
+			if (data[num] == '3')
+			{
+				winCondition = vector3(-37.5 + (i * 5), 15, -37.5 + (j * 5));
 			}
 		}
 	}
 	
-
+	std::cout << winCondition.x << ", " << winCondition.y << ", " << winCondition.z << std::endl;
 	m_uOctantLevels = 1;
 	m_pRoot = new MyOctant(m_uOctantLevels, 5);
-
+	winner = false;
 	m_pEntityMngr->Update();
 	m_pBall->Update();
 }
@@ -110,54 +114,79 @@ void Application::Update(void)
 
 	uint numCubes = m_pEntityMngr->GetEntityCount();
 
-	for (uint i = 0; i < numCubes; i++)
+	//if the ball is within the bounds of the win condition
+	if (m_pBall->GetPosition().x > winCondition.x - 2.5 && m_pBall->GetPosition().x < winCondition.x + 2.5 &&
+		m_pBall->GetPosition().z > winCondition.z - 2.5 && m_pBall->GetPosition().z < winCondition.z + 2.5 &&
+		m_pBall->GetPosition().y > 12.5 && m_pBall->GetPosition().y < 17.5 && !winner)
 	{
-		MyEntity* temp = m_pEntityMngr->GetEntity(i);
-		bool isColliding = true;
-
-		if (m_pBall->GetRigidBody()->GetMaxGlobal().x < temp->GetRigidBody()->GetMinGlobal().x) //this to the right of other
-			isColliding = false;
-		if (m_pBall->GetRigidBody()->GetMinGlobal().x > temp->GetRigidBody()->GetMaxGlobal().x) //this to the left of other
-			isColliding = false;
-
-		if (m_pBall->GetRigidBody()->GetMaxGlobal().y < temp->GetRigidBody()->GetMinGlobal().y) //this below of other
-			isColliding = false;
-		if (m_pBall->GetRigidBody()->GetMinGlobal().y > temp->GetRigidBody()->GetMaxGlobal().y) //this above of other
-			isColliding = false;
-
-		if (m_pBall->GetRigidBody()->GetMaxGlobal().z < temp->GetRigidBody()->GetMinGlobal().z) //this behind of other
-			isColliding = false;
-		if (m_pBall->GetRigidBody()->GetMinGlobal().z > temp->GetRigidBody()->GetMaxGlobal().z) //this in front of other
-			isColliding = false;
-
-		//if (m_pBall->GetPosition().x + 0.2f < temp->GetRigidBody()->GetMaxGlobal().x) //this to the right of other
-		//	isColliding = false;
-		//if (m_pBall->GetPosition().x - 0.2f> temp->GetRigidBody()->GetMaxGlobal().x) //this to the left of other
-		//	isColliding = false;
-
-		//if (m_pBall->GetPosition().y + 0.2f < temp->GetRigidBody()->GetMinGlobal().y) //this below of other
-		//	isColliding = false;
-		//if (m_pBall->GetPosition().y - 0.2f > temp->GetRigidBody()->GetMaxGlobal().y) //this above of other
-		//	isColliding = false;
-
-		//if (m_pBall->GetPosition().z + 0.2f < temp->GetRigidBody()->GetMinGlobal().z) //this behind of other
-		//	isColliding = false;
-		//if (m_pBall->GetPosition().z - 0.2f > temp->GetRigidBody()->GetMaxGlobal().z) //this in front of other
-		//	isColliding = false;
-
-		if (isColliding)
+		std::cout << "You win" << std::endl;
+		winner = true;
+	}
+	if (!winner)
+	{
+		for (uint i = 0; i < numCubes; i++)
 		{
-			//m_pBall->UsePhysicsSolver(false);
-			if (m_pBall->GetPosition().y > temp->GetPosition().y)
+			MyEntity* temp = m_pEntityMngr->GetEntity(i);
+			bool isColliding = true;
+
+			if (m_pBall->GetRigidBody()->GetMaxGlobal().x < temp->GetRigidBody()->GetMinGlobal().x) //this to the right of other
+				isColliding = false;
+			if (m_pBall->GetRigidBody()->GetMinGlobal().x > temp->GetRigidBody()->GetMaxGlobal().x) //this to the left of other
+				isColliding = false;
+
+			if (m_pBall->GetRigidBody()->GetMaxGlobal().y < temp->GetRigidBody()->GetMinGlobal().y) //this below of other
+				isColliding = false;
+			if (m_pBall->GetRigidBody()->GetMinGlobal().y > temp->GetRigidBody()->GetMaxGlobal().y) //this above of other
+				isColliding = false;
+
+			if (m_pBall->GetRigidBody()->GetMaxGlobal().z < temp->GetRigidBody()->GetMinGlobal().z) //this behind of other
+				isColliding = false;
+			if (m_pBall->GetRigidBody()->GetMinGlobal().z > temp->GetRigidBody()->GetMaxGlobal().z) //this in front of other
+				isColliding = false;
+
+			//if (m_pBall->GetPosition().x + 0.2f < temp->GetRigidBody()->GetMaxGlobal().x) //this to the right of other
+			//	isColliding = false;
+			//if (m_pBall->GetPosition().x - 0.2f> temp->GetRigidBody()->GetMaxGlobal().x) //this to the left of other
+			//	isColliding = false;
+
+			//if (m_pBall->GetPosition().y + 0.2f < temp->GetRigidBody()->GetMinGlobal().y) //this below of other
+			//	isColliding = false;
+			//if (m_pBall->GetPosition().y - 0.2f > temp->GetRigidBody()->GetMaxGlobal().y) //this above of other
+			//	isColliding = false;
+
+			//if (m_pBall->GetPosition().z + 0.2f < temp->GetRigidBody()->GetMinGlobal().z) //this behind of other
+			//	isColliding = false;
+			//if (m_pBall->GetPosition().z - 0.2f > temp->GetRigidBody()->GetMaxGlobal().z) //this in front of other
+			//	isColliding = false;
+
+			if (isColliding)
 			{
-				m_pBall->GetSolver()->ApplyForce(vector3(0.0f, -(m_pBall->GetSolver()->GetVelocity().y + -0.001f), 0.0f));
-				
+				//m_pBall->UsePhysicsSolver(false);
+				if (m_pBall->GetRigidBody()->GetMaxGlobal().y > temp->GetRigidBody()->GetMaxGlobal().y)
+				{
+					m_pBall->GetSolver()->ApplyForce(vector3(0.0f, -(m_pBall->GetSolver()->GetVelocity().y + -0.001f), 0.0f));
+				}
+				else
+				{
+					std::cout << "collision" << std::endl;
+					if (m_pBall->GetRigidBody()->GetMinGlobal().x < temp->GetRigidBody()->GetMinGlobal().x && m_pBall->GetSolver()->GetVelocity().x > 0.0f)
+					{
+						m_pBall->GetSolver()->ApplyForce(vector3(-(m_pBall->GetSolver()->GetVelocity().x + 0.0001f), 0.0f, 0.0f));
+					}
+					if (m_pBall->GetRigidBody()->GetMaxGlobal().x > temp->GetRigidBody()->GetMaxGlobal().x && m_pBall->GetSolver()->GetVelocity().x < 0.0f)
+					{
+						m_pBall->GetSolver()->ApplyForce(vector3(-(m_pBall->GetSolver()->GetVelocity().x + -0.0001f), 0.0f, 0.0f));
+					}
+					if (m_pBall->GetRigidBody()->GetMinGlobal().z < temp->GetRigidBody()->GetMinGlobal().z && m_pBall->GetSolver()->GetVelocity().z > 0.0f)
+					{
+						m_pBall->GetSolver()->ApplyForce(vector3(0.0f, 0.0f, -(m_pBall->GetSolver()->GetVelocity().z + 0.0001f)));
+					}
+					if (m_pBall->GetRigidBody()->GetMaxGlobal().z > temp->GetRigidBody()->GetMaxGlobal().z && m_pBall->GetSolver()->GetVelocity().z < 0.0f)
+					{
+						m_pBall->GetSolver()->ApplyForce(vector3(0.0f, 0.0f, -(m_pBall->GetSolver()->GetVelocity().z + -0.0001f)));
+					}
+				}
 			}
-			/*else if (m_pBall->GetPosition().x > temp->GetPosition().x && m_pBall->GetSolver()->GetVelocity().x > 0.0f)
-			{
-				std::cout << "collision" << std::endl;
-				m_pBall->GetSolver()->ApplyForce(vector3(-(m_pBall->GetSolver()->GetVelocity().x + 0.0001f), 0.0f, 0.0f));
-			}*/
 		}
 	}
 
@@ -207,16 +236,19 @@ void Application::Release(void)
 }
 
 void Application::ProcessInput(MyEntity* ball) {
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-		ball->PushBall(vector3(0.0f, 0.0f, 0.0001f));
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-		ball->PushBall(vector3(0.0f, 0.0f, -0.0001f));
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-		ball->PushBall(vector3(0.0001f, 0.0f, 0.0f));
-	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-		ball->PushBall(vector3(-0.0001f, 0.0f, 0.0f));
+	if (!winner)
+	{
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+			ball->PushBall(vector3(0.0f, 0.0f, 0.00005f));
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+			ball->PushBall(vector3(0.0f, 0.0f, -0.00005f));
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+			ball->PushBall(vector3(0.00005f, 0.0f, 0.0f));
+		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+			ball->PushBall(vector3(-0.00005f, 0.0f, 0.0f));
+		}
 	}
 }
