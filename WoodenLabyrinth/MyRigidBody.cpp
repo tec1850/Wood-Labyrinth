@@ -308,7 +308,7 @@ bool MyRigidBody::IsColliding(MyRigidBody* const other)
 		if (this->m_v3MinG.z > other->m_v3MaxG.z) //this in front of other
 			bColliding = false;
 
-		if (bColliding) //they are colliding with bounding box also
+		/**/if (bColliding) //they are colliding with bounding box also
 		{
 			this->AddCollisionWith(other);
 			other->AddCollisionWith(this);
@@ -319,7 +319,7 @@ bool MyRigidBody::IsColliding(MyRigidBody* const other)
 			other->RemoveCollisionWith(this);
 		}
 	}
-	else //they are not colliding with bounding sphere
+	/**/else //they are not colliding with bounding sphere
 	{
 		this->RemoveCollisionWith(other);
 		other->RemoveCollisionWith(this);

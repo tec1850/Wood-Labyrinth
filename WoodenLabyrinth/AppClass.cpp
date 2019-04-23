@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 using namespace Simplex; //10.0.17763.0 - lab sdk version
+						 //10.0.16299.0 - sdk version it was on when i opened it today for some reason
 
 
 
@@ -66,7 +67,7 @@ void Application::InitVariables(void)
 			if (data[num] == '0')
 			{
 				m_pEntityMngr->AddEntity("cubeMesh.fbx");
-				vector3 v3Position = vector3(-7.5 + (i * 5), 11, -7.5 + (j * 5));
+				vector3 v3Position = vector3(-7.5 + (i * 5), 15, -7.5 + (j * 5));
 				matrix4 m4Pos = glm::translate(v3Position);
 				m_pEntityMngr->SetModelMatrix(m4Pos * glm::scale(vector3(5.f)));
 			}
@@ -75,15 +76,12 @@ void Application::InitVariables(void)
 			{
 				m_pBall = new MyEntity("sphere.fbx");
 				m_pBall->UsePhysicsSolver(true);
-				vector3 v3Position = vector3(-7.5 + (i * 5), 25, -7.5 + (j * 5));
+				vector3 v3Position = vector3(-7.5 + (i * 5), 15, -7.5 + (j * 5));
 				matrix4 m4Pos = glm::translate(v3Position);
-				m_pBall->SetModelMatrix(m4Pos * glm::scale(vector3(0.2f)));
+				m_pBall->SetModelMatrix(m4Pos * glm::scale(vector3(0.4f)));
 			}
 		}
 	}
-
-	//adds sphere	
-	//m_pBall->SetMass(1.0f);
 	
 
 	m_uOctantLevels = 1;
@@ -99,7 +97,7 @@ void Application::Update(void)
 
 	//Is the arcball active?
 	ArcBall();
-
+	
 	//check for input
 	ProcessInput(m_pBall);
 
@@ -115,11 +113,55 @@ void Application::Update(void)
 	for (uint i = 0; i < numCubes; i++)
 	{
 		MyEntity* temp = m_pEntityMngr->GetEntity(i);
-		if (m_pBall->IsColliding(temp))
+		bool isColliding = true;
+
+		if (m_pBall->GetRigidBody()->GetMaxGlobal().x < temp->GetRigidBody()->GetMinGlobal().x) //this to the right of other
+			isColliding = false;
+		if (m_pBall->GetRigidBody()->GetMinGlobal().x > temp->GetRigidBody()->GetMaxGlobal().x) //this to the left of other
+			isColliding = false;
+
+		if (m_pBall->GetRigidBody()->GetMaxGlobal().y < temp->GetRigidBody()->GetMinGlobal().y) //this below of other
+			isColliding = false;
+		if (m_pBall->GetRigidBody()->GetMinGlobal().y > temp->GetRigidBody()->GetMaxGlobal().y) //this above of other
+			isColliding = false;
+
+		if (m_pBall->GetRigidBody()->GetMaxGlobal().z < temp->GetRigidBody()->GetMinGlobal().z) //this behind of other
+			isColliding = false;
+		if (m_pBall->GetRigidBody()->GetMinGlobal().z > temp->GetRigidBody()->GetMaxGlobal().z) //this in front of other
+			isColliding = false;
+
+		//if (m_pBall->GetPosition().x + 0.2f < temp->GetRigidBody()->GetMaxGlobal().x) //this to the right of other
+		//	isColliding = false;
+		//if (m_pBall->GetPosition().x - 0.2f> temp->GetRigidBody()->GetMaxGlobal().x) //this to the left of other
+		//	isColliding = false;
+
+		//if (m_pBall->GetPosition().y + 0.2f < temp->GetRigidBody()->GetMinGlobal().y) //this below of other
+		//	isColliding = false;
+		//if (m_pBall->GetPosition().y - 0.2f > temp->GetRigidBody()->GetMaxGlobal().y) //this above of other
+		//	isColliding = false;
+
+		//if (m_pBall->GetPosition().z + 0.2f < temp->GetRigidBody()->GetMinGlobal().z) //this behind of other
+		//	isColliding = false;
+		//if (m_pBall->GetPosition().z - 0.2f > temp->GetRigidBody()->GetMaxGlobal().z) //this in front of other
+		//	isColliding = false;
+
+		if (isColliding)
 		{
-			m_pBall->GetSolver()->ApplyForce(vector3(0.0f, -0.12f, 0.0f));
+			//m_pBall->UsePhysicsSolver(false);
+			if (m_pBall->GetPosition().y > temp->GetPosition().y)
+			{
+				m_pBall->GetSolver()->ApplyForce(vector3(0.0f, -(m_pBall->GetSolver()->GetVelocity().y + -0.001f), 0.0f));
+				
+			}
+			/*else if (m_pBall->GetPosition().x > temp->GetPosition().x && m_pBall->GetSolver()->GetVelocity().x > 0.0f)
+			{
+				std::cout << "collision" << std::endl;
+				m_pBall->GetSolver()->ApplyForce(vector3(-(m_pBall->GetSolver()->GetVelocity().x + 0.0001f), 0.0f, 0.0f));
+			}*/
 		}
 	}
+
+	//m_pBall->UsePhysicsSolver(false);
 
 	//std::cout << (m_pBall->GetPosition().y);
 

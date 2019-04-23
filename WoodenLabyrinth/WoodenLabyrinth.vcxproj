@@ -14,7 +14,7 @@
     <ProjectGuid>{83FE3AEA-8E81-4D18-B3B3-0392C4B1179B}</ProjectGuid>
     <RootNamespace>WoodenLabyrinth</RootNamespace>
     <ProjectName>WoodenLabyrinth</ProjectName>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

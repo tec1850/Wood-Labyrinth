@@ -101,7 +101,7 @@ vector3 RoundSmallVelocity(vector3 a_v3Velocity, float minVelocity = 0.01f)
 void MySolver::SetIsColliding(bool a_bIsCollding) { m_bIsCollding = a_bIsCollding; }
 void MySolver::Update(void)
 {
-	ApplyForce(vector3(0.0f, -0.12f, 0.0f) * m_fMass);
+	ApplyForce(vector3(0.0f, -0.001f, 0.0f) * m_fMass);
 	//ApplyForce(vector3(0.0f, -0.16f, 0.0f) * m_fMass); //real world borring gravity! (9.81 * deltatime)
 
 
@@ -110,8 +110,8 @@ void MySolver::Update(void)
 	float fMaxVelocity = 5.0f;
 	m_v3Velocity = CalculateMaxVelocity(m_v3Velocity, fMaxVelocity);
 
-	ApplyFriction(0.1f);
-	m_v3Velocity = RoundSmallVelocity(m_v3Velocity, 0.028f);
+	//ApplyFriction(0.1f);
+	//m_v3Velocity = RoundSmallVelocity(m_v3Velocity, 0.028f);
 
 	if (m_bIsCollding && m_v3Velocity.y < 0.0f)
 		m_v3Velocity.y = 0.0f;
