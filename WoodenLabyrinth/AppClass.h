@@ -26,6 +26,7 @@ class Application
 	uint m_uOctantLevels = 0; //Number of levels in the octree
 	char* data;
 	vector3 winCondition;
+	bool winner;
 
 private:
 	static ImGuiObject gui; //GUI object
