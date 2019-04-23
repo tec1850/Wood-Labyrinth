@@ -67,7 +67,7 @@ void Application::InitVariables(void)
 			if (data[num] == '0')
 			{
 				m_pEntityMngr->AddEntity("cubeMesh.fbx");
-				vector3 v3Position = vector3(-37.5 + (i * 5), 13, -37.5 + (j * 5));
+				vector3 v3Position = vector3(-37.5 + (i * 5), 15, -37.5 + (j * 5));
 				matrix4 m4Pos = glm::translate(v3Position);
 				m_pEntityMngr->SetModelMatrix(m4Pos * glm::scale(vector3(5.f)));
 			}
@@ -80,10 +80,14 @@ void Application::InitVariables(void)
 				matrix4 m4Pos = glm::translate(v3Position);
 				m_pBall->SetModelMatrix(m4Pos * glm::scale(vector3(0.4f)));
 			}
+			if (data[num] == '3')
+			{
+				winCondition = vector3(-37.5 + (i * 5), 15, -37.5 + (j * 5));
+			}
 		}
 	}
 	
-
+	std::cout << winCondition.x << ", " << winCondition.y << ", " << winCondition.z << std::endl;
 	m_uOctantLevels = 1;
 	m_pRoot = new MyOctant(m_uOctantLevels, 5);
 
@@ -109,6 +113,14 @@ void Application::Update(void)
 	m_pBall->Update();
 
 	uint numCubes = m_pEntityMngr->GetEntityCount();
+
+	//if the ball is within the bounds of the win condition
+	if (m_pBall->GetPosition().x > winCondition.x - 2.5 && m_pBall->GetPosition().x < winCondition.x + 2.5 &&
+		m_pBall->GetPosition().z > winCondition.z - 2.5 && m_pBall->GetPosition().z < winCondition.z + 2.5 &&
+		m_pBall->GetPosition().y > 12.5 && m_pBall->GetPosition().y < 17.5)
+	{
+		std::cout << "YOU WIN" << std::endl;
+	}
 
 	for (uint i = 0; i < numCubes; i++)
 	{
@@ -222,15 +234,15 @@ void Application::Release(void)
 
 void Application::ProcessInput(MyEntity* ball) {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-		ball->PushBall(vector3(0.0f, 0.0f, 0.00001f));
+		ball->PushBall(vector3(0.0f, 0.0f, 0.00005f));
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-		ball->PushBall(vector3(0.0f, 0.0f, -0.00001f));
+		ball->PushBall(vector3(0.0f, 0.0f, -0.00005f));
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-		ball->PushBall(vector3(0.00001f, 0.0f, 0.0f));
+		ball->PushBall(vector3(0.00005f, 0.0f, 0.0f));
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-		ball->PushBall(vector3(-0.00001f, 0.0f, 0.0f));
+		ball->PushBall(vector3(-0.00005f, 0.0f, 0.0f));
 	}
 }
