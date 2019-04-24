@@ -162,30 +162,40 @@ void Application::Update(void)
 			if (isColliding)
 			{
 				//m_pBall->UsePhysicsSolver(false);
-				if (m_pBall->GetRigidBody()->GetMaxGlobal().y > temp->GetRigidBody()->GetMaxGlobal().y)
+				if (m_pBall->GetRigidBody()->GetMaxGlobal().y > temp->GetRigidBody()->GetMaxGlobal().y && m_pBall->GetSolver()->GetVelocity().y < 0.0f)
 				{
 					m_pBall->GetSolver()->ApplyForce(vector3(0.0f, -(m_pBall->GetSolver()->GetVelocity().y + -0.001f), 0.0f));
+					std::cout << "collision with floor i = " << i << std::endl;
+					continue;
 				}
-				else
+				else if(!(m_pBall->GetRigidBody()->GetMaxGlobal().y > temp->GetRigidBody()->GetMaxGlobal().y))
 				{
-					std::cout << "collision" << std::endl;
-					if (m_pBall->GetRigidBody()->GetMinGlobal().x < temp->GetRigidBody()->GetMinGlobal().x && m_pBall->GetSolver()->GetVelocity().x > 0.0f)
+					std::cout << "collision with wall i = " << i << std::endl;
+					if (m_pBall->GetRigidBody()->GetMinGlobal().x < temp->GetRigidBody()->GetMinGlobal().x && m_pBall->GetSolver()->GetVelocity().x > 0.0f) //left collision
 					{
-						m_pBall->GetSolver()->ApplyForce(vector3(-(m_pBall->GetSolver()->GetVelocity().x + 0.0001f), 0.0f, 0.0f));
+						//m_pBall->GetSolver()->ApplyForce(vector3(-(m_pBall->GetSolver()->GetVelocity().x + 0.0001f), 0.0f, 0.0f));
+						m_pBall->GetSolver()->SetVelocity(vector3(-0.01f, m_pBall->GetVelocity().y, m_pBall->GetVelocity().z));
 					}
-					if (m_pBall->GetRigidBody()->GetMaxGlobal().x > temp->GetRigidBody()->GetMaxGlobal().x && m_pBall->GetSolver()->GetVelocity().x < 0.0f)
+					if (m_pBall->GetRigidBody()->GetMaxGlobal().x > temp->GetRigidBody()->GetMaxGlobal().x && m_pBall->GetSolver()->GetVelocity().x < 0.0f) //right collision
 					{
-						m_pBall->GetSolver()->ApplyForce(vector3(-(m_pBall->GetSolver()->GetVelocity().x + -0.0001f), 0.0f, 0.0f));
+						//m_pBall->GetSolver()->ApplyForce(vector3(-(m_pBall->GetSolver()->GetVelocity().x + -0.0001f), 0.0f, 0.0f));
+						m_pBall->GetSolver()->SetVelocity(vector3(0.01f, m_pBall->GetVelocity().y, m_pBall->GetVelocity().z));
 					}
 					if (m_pBall->GetRigidBody()->GetMinGlobal().z < temp->GetRigidBody()->GetMinGlobal().z && m_pBall->GetSolver()->GetVelocity().z > 0.0f)
 					{
-						m_pBall->GetSolver()->ApplyForce(vector3(0.0f, 0.0f, -(m_pBall->GetSolver()->GetVelocity().z + 0.0001f)));
+						//m_pBall->GetSolver()->ApplyForce(vector3(0.0f, 0.0f, -(m_pBall->GetSolver()->GetVelocity().z + 0.0001f)));
+						m_pBall->GetSolver()->SetVelocity(vector3(m_pBall->GetVelocity().x, m_pBall->GetVelocity().y, -0.01f));
 					}
 					if (m_pBall->GetRigidBody()->GetMaxGlobal().z > temp->GetRigidBody()->GetMaxGlobal().z && m_pBall->GetSolver()->GetVelocity().z < 0.0f)
 					{
-						m_pBall->GetSolver()->ApplyForce(vector3(0.0f, 0.0f, -(m_pBall->GetSolver()->GetVelocity().z + -0.0001f)));
+						//m_pBall->GetSolver()->ApplyForce(vector3(0.0f, 0.0f, -(m_pBall->GetSolver()->GetVelocity().z + -0.0001f)));
+						m_pBall->GetSolver()->SetVelocity(vector3(m_pBall->GetVelocity().x, m_pBall->GetVelocity().y, 0.01f));
 					}
 				}
+			}
+			if (m_pBall->GetVelocity().y > 0.0f)
+			{
+				m_pBall->SetVelocity(vector3(m_pBall->GetVelocity().x, 0.0f, m_pBall->GetVelocity().z));
 			}
 		}
 	}
