@@ -4,9 +4,6 @@
 using namespace Simplex; //10.0.17763.0 - lab sdk version
 						 //10.0.16299.0 - sdk version it was on when i opened it today for some reason
 
-
-
-
 void Application::InitVariables(void)
 {
 	m_sProgrammer = "TEAM BACKROW";
@@ -206,12 +203,14 @@ void Application::LoadLevel(int levelNum)
 	delete[] data;
 	delete m_pRoot;
 	m_pRoot = new MyOctant(m_uOctantLevels, 5);
-	for (uint i = 0; i < m_pEntityMngr->GetEntityCount(); i++)
-	{
-		m_pEntityMngr->RemoveEntity(i);
-	}
 
-	std::cout << "Loading level " << levelNum << std::endl;
+	while (m_pEntityMngr->GetEntityCount() > 1)
+	{
+		for (uint i = 0; i < m_pEntityMngr->GetEntityCount(); i++)
+		{
+			m_pEntityMngr->RemoveEntity(i);
+		}
+	}
 
 	std::ifstream m_fTheFile;
 	m_fTheFile.open("labData" + std::to_string(levelNum) + ".txt", std::ios_base::in | std::ios_base::binary);
@@ -283,9 +282,8 @@ void Application::LoadLevel(int levelNum)
 				}
 			}
 		}
-		return;
 	}
-	else
+	else if(levelNum == 5)
 	{
 		for (int i = 0; i < 45; i++)
 		{
@@ -337,6 +335,5 @@ void Application::LoadLevel(int levelNum)
 				}
 			}
 		}
-		return;
 	}
 }
