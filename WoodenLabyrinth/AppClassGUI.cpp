@@ -123,17 +123,7 @@ void Application::DrawGUI(void)
 	for (uint i = 0; i < nEmptyLines; ++i)
 		m_pMeshMngr->PrintLine("");//Add a line on top
 	//m_pMeshMngr->Print("						");
-	m_pMeshMngr->PrintLine(m_pSystem->GetAppName(), C_YELLOW);
-	//m_pMeshMngr->Print("						");
-	m_pMeshMngr->Print("Press ");
-	m_pMeshMngr->Print("SpaceBar", C_BLUE);
-	m_pMeshMngr->PrintLine(" for sound!");
-
-	//m_pMeshMngr->Print("						");
-	m_pMeshMngr->Print("RenderCalls: ");//Add a line on top
-	m_pMeshMngr->PrintLine(std::to_string(m_uRenderCallCount), C_YELLOW);
-
-	//m_pMeshMngr->Print("						");
+	m_pMeshMngr->PrintLine("Wooden Labyrinth", C_YELLOW);
 	m_pMeshMngr->Print("FPS:");
 	m_pMeshMngr->Print(std::to_string(m_pSystem->GetFPS()), C_RED);
 #pragma endregion
@@ -167,17 +157,12 @@ void Application::DrawGUI(void)
 		{
 			ImGui::Text("FrameRate: %.2f [FPS] -> %.3f [ms/frame] ",
 				ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
-			ImGui::Text("RenderCalls: %d", m_uRenderCallCount);
-			ImGui::Text("Controllers: %d", m_uControllerCount);
 			ImGui::Separator();
-			if (ImGui::Button("Console"))
-				m_bGUI_Console ^= 1;
-			ImGui::SameLine();
-			if (ImGui::Button("Controller"))
-				m_bGUI_Controller ^= 1;
-			ImGui::SameLine();
-			if (ImGui::Button("ImGui - Test Window"))
-				m_bGUI_Test ^= 1;
+			ImGui::Text("CONTROLS:");
+			ImGui::Text("Press number keys 1 - 6 change level.");
+			ImGui::Text("Level 6 is a stress text for octree.");
+			ImGui::Text("Press + to increment octree.");
+			ImGui::Text("Press - to decrement octree.");
 			//ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
 			//ImGui::ColorEdit3("color", (float*)&v4ClearColor);
 		}
