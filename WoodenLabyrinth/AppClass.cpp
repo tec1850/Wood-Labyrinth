@@ -67,6 +67,15 @@ void Application::Update(void)
 	}
 	if (!winner)
 	{
+		uint startIndex = 0;
+		for (int f = m_uOctantLevels - 1; f >= 0; f--) //get index of first octant at current layer
+		{
+			startIndex = startIndex + pow(8, f);
+		}
+		for (uint x = startIndex; x < pow(8, m_uOctantLevels) + startIndex; x++) //loop through all octants at current layer
+		{
+			std::cout << x << std::endl;
+		}
 		for (uint i = 0; i < numCubes; i++)
 		{
 			MyEntity* temp = m_pEntityMngr->GetEntity(i);
