@@ -51,6 +51,11 @@ void Application::Update(void)
 	m_pEntityMngr->Update();
 	m_pBall->Update();
 
+	if (m_pBall->GetPosition().y < 0 && winner == false)
+	{
+		m_pBall->SetPosition(startPosition);
+	}
+
 	uint numCubes = m_pEntityMngr->GetEntityCount();
 	//if the ball is within the bounds of the win condition
 	if (m_pBall->GetPosition().x > winCondition.x - 2.5 && m_pBall->GetPosition().x < winCondition.x + 2.5 &&
@@ -244,6 +249,10 @@ void Application::LoadLevel(int levelNum)
 					matrix4 m4Pos = glm::translate(v3Position);
 					m_pEntityMngr->SetModelMatrix(m4Pos * glm::scale(vector3(5.f)));
 				}
+				else if(data[num] == '4')
+				{
+					continue;
+				}
 				else
 				{
 					m_pEntityMngr->AddEntity("baseCube.fbx", "base_" + i + j);
@@ -272,6 +281,7 @@ void Application::LoadLevel(int levelNum)
 					m_pBall = new MyEntity("sphere.fbx");
 					m_pBall->UsePhysicsSolver(true);
 					vector3 v3Position = vector3(-37.5 + (i * 5), 15, -37.5 + (j * 5));
+					startPosition = vector3(-37.5 + (i * 5), 17, -37.5 + (j * 5));
 					matrix4 m4Pos = glm::translate(v3Position);
 					m_pBall->SetModelMatrix(m4Pos * glm::scale(vector3(0.75f)));
 				}
