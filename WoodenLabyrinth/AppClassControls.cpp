@@ -144,11 +144,30 @@ void Application::ProcessKeyReleased(sf::Event a_event)
 
 			SafeDelete(m_pRoot);
 			m_pRoot = new MyOctant(m_uOctantLevels, 5);
-
 		}
+		break;
 	case sf::Keyboard::LShift:
 	case sf::Keyboard::RShift:
 		m_bModifier = false;
+		break;
+	case sf::Keyboard::Num1:
+		LoadLevel(0);
+		break;
+	case sf::Keyboard::Num2:
+		LoadLevel(1);
+		break;
+	case sf::Keyboard::Num3:
+		LoadLevel(2);
+		break;
+	case sf::Keyboard::Num4:
+		LoadLevel(3);
+		break;
+	case sf::Keyboard::Num5:
+		LoadLevel(4);
+		break;
+	case sf::Keyboard::Num6:
+		LoadLevel(5);
+		break;
 	}
 
 	//gui

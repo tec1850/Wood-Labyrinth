@@ -336,6 +336,9 @@ private:
 	*/
 	Application& operator=(Application const& input);
 #pragma endregion
+
+public:
+	void LoadLevel(int levelNum);
 };
 
 }//namespace Simplex

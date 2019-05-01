@@ -25,69 +25,11 @@ void Application::InitVariables(void)
 	//m_pEntityMngr->UsePhysicsSolver();
 	//m_pEntityMngr->AddEntity("cubeMesh.fbx", "Cube");
 	//m_pEntityMngr->SetModelMatrix(IDENTITY_M4 * glm::translate(vector3(0.f, 10.f, 0.f)));
-
-	//grab the .dat folder
-	std::ifstream m_fTheFile;
-	m_fTheFile.open("labData.txt", std::ios_base::in | std::ios_base::binary);
-	std::string line;
-	data = new char[100000];
-
-	if (m_fTheFile.is_open())
-	{
-		while (std::getline(m_fTheFile, line))
-		{
-			for (uint i = 0; i < line.length(); i++)
-			{
-				std::cout << "Current index value: " << line[i] << std::endl;
-				data[i] = line[i];
-			}
-		}
-	}
-	m_fTheFile.close();
-
-	//base floor thing
-	for (int i = 0; i < 15; i++)
-	{
-		for (int j = 0; j < 15; j++)
-		{
-			m_pEntityMngr->AddEntity("baseCube.fbx", "base_" + i + j);
-			vector3 v3Position = vector3(-37.5 + (i * 5), 10, -37.5 + (j * 5));
-			matrix4 m4Pos = glm::translate(v3Position);
-			m_pEntityMngr->SetModelMatrix(m4Pos * glm::scale(vector3(5.f)));
-		}
-	}
-
-	//adds squares on top
-	for (int i = 0; i < 15; i++)
-	{
-		for (int j = 0; j < 15; j++)
-		{
-			uint num = (15 * i) + j;
-			std::cout << data[num] << std::endl;
-			if (data[num] == '0')
-			{
-				m_pEntityMngr->AddEntity("cubeMesh.fbx");
-				vector3 v3Position = vector3(-37.5 + (i * 5), 15, -37.5 + (j * 5));
-				matrix4 m4Pos = glm::translate(v3Position);
-				m_pEntityMngr->SetModelMatrix(m4Pos * glm::scale(vector3(5.f)));
-			}
-
-			if (data[num] == '2')
-			{
-				m_pBall = new MyEntity("sphere.fbx");
-				m_pBall->UsePhysicsSolver(true);
-				vector3 v3Position = vector3(-37.5 + (i * 5), 15, -37.5 + (j * 5));
-				matrix4 m4Pos = glm::translate(v3Position);
-				m_pBall->SetModelMatrix(m4Pos * glm::scale(vector3(0.4f)));
-			}
-			if (data[num] == '3')
-			{
-				winCondition = vector3(-37.5 + (i * 5), 15, -37.5 + (j * 5));
-			}
-		}
-	}
 	
-	std::cout << winCondition.x << ", " << winCondition.y << ", " << winCondition.z << std::endl;
+	
+
+	LoadLevel(0);
+
 	m_uOctantLevels = 1;
 	m_pRoot = new MyOctant(m_uOctantLevels, 5);
 	winner = false;
@@ -113,11 +55,10 @@ void Application::Update(void)
 	m_pBall->Update();
 
 	uint numCubes = m_pEntityMngr->GetEntityCount();
-
 	//if the ball is within the bounds of the win condition
 	if (m_pBall->GetPosition().x > winCondition.x - 2.5 && m_pBall->GetPosition().x < winCondition.x + 2.5 &&
 		m_pBall->GetPosition().z > winCondition.z - 2.5 && m_pBall->GetPosition().z < winCondition.z + 2.5 &&
-		m_pBall->GetPosition().y > 12.5 && m_pBall->GetPosition().y < 17.5 && !winner)
+		m_pBall->GetPosition().y > 9.9 && m_pBall->GetPosition().y < 20.1 && !winner)
 	{
 		std::cout << "You win" << std::endl;
 		winner = true;
@@ -165,12 +106,10 @@ void Application::Update(void)
 				if (m_pBall->GetRigidBody()->GetMaxGlobal().y > temp->GetRigidBody()->GetMaxGlobal().y && m_pBall->GetSolver()->GetVelocity().y < 0.0f)
 				{
 					m_pBall->GetSolver()->ApplyForce(vector3(0.0f, -(m_pBall->GetSolver()->GetVelocity().y + -0.001f), 0.0f));
-					std::cout << "collision with floor i = " << i << std::endl;
 					continue;
 				}
 				else if(!(m_pBall->GetRigidBody()->GetMaxGlobal().y > temp->GetRigidBody()->GetMaxGlobal().y))
 				{
-					std::cout << "collision with wall i = " << i << std::endl;
 					if (m_pBall->GetRigidBody()->GetMinGlobal().x < temp->GetRigidBody()->GetMinGlobal().x && m_pBall->GetSolver()->GetVelocity().x > 0.0f) //left collision
 					{
 						//m_pBall->GetSolver()->ApplyForce(vector3(-(m_pBall->GetSolver()->GetVelocity().x + 0.0001f), 0.0f, 0.0f));
@@ -202,7 +141,6 @@ void Application::Update(void)
 
 	//m_pBall->UsePhysicsSolver(false);
 
-	//std::cout << (m_pBall->GetPosition().y);
 
 	//Add objects to render list
 	m_pEntityMngr->AddEntityToRenderList(-1, true);
@@ -260,5 +198,145 @@ void Application::ProcessInput(MyEntity* ball) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
 			ball->PushBall(vector3(-0.00005f, 0.0f, 0.0f));
 		}
+	}
+}
+
+void Application::LoadLevel(int levelNum)
+{
+	delete[] data;
+	delete m_pRoot;
+	m_pRoot = new MyOctant(m_uOctantLevels, 5);
+	for (uint i = 0; i < m_pEntityMngr->GetEntityCount(); i++)
+	{
+		m_pEntityMngr->RemoveEntity(i);
+	}
+
+	std::cout << "Loading level " << levelNum << std::endl;
+
+	std::ifstream m_fTheFile;
+	m_fTheFile.open("labData" + std::to_string(levelNum) + ".txt", std::ios_base::in | std::ios_base::binary);
+	std::string line;
+	data = new char[100000];
+
+	if (m_fTheFile.is_open())
+	{
+		while (std::getline(m_fTheFile, line))
+		{
+			for (uint i = 0; i < line.length(); i++)
+			{
+				data[i] = line[i];
+			}
+		}
+	}
+	m_fTheFile.close();
+
+	//base floor thing
+	if (levelNum < 5)
+	{
+		for (int i = 0; i < 15; i++)
+		{
+			for (int j = 0; j < 15; j++)
+			{
+				uint num = (15 * i) + j;
+				if (data[num] == '3')
+				{
+					m_pEntityMngr->AddEntity("baseCubeEnd.fbx", "baseEnd" + i + j);
+					vector3 v3Position = vector3(-37.5 + (i * 5), 10, -37.5 + (j * 5));
+					matrix4 m4Pos = glm::translate(v3Position);
+					m_pEntityMngr->SetModelMatrix(m4Pos * glm::scale(vector3(5.f)));
+				}
+				else
+				{
+					m_pEntityMngr->AddEntity("baseCube.fbx", "base_" + i + j);
+					vector3 v3Position = vector3(-37.5 + (i * 5), 10, -37.5 + (j * 5));
+					matrix4 m4Pos = glm::translate(v3Position);
+					m_pEntityMngr->SetModelMatrix(m4Pos * glm::scale(vector3(5.f)));
+				}
+			}
+		}
+
+		for (int i = 0; i < 15; i++)
+		{
+			for (int j = 0; j < 15; j++)
+			{
+				uint num = (15 * i) + j;
+				if (data[num] == '0')
+				{
+					m_pEntityMngr->AddEntity("cubeMesh.fbx");
+					vector3 v3Position = vector3(-37.5 + (i * 5), 15, -37.5 + (j * 5));
+					matrix4 m4Pos = glm::translate(v3Position);
+					m_pEntityMngr->SetModelMatrix(m4Pos * glm::scale(vector3(5.f)));
+				}
+
+				if (data[num] == '2')
+				{
+					m_pBall = new MyEntity("sphere.fbx");
+					m_pBall->UsePhysicsSolver(true);
+					vector3 v3Position = vector3(-37.5 + (i * 5), 15, -37.5 + (j * 5));
+					matrix4 m4Pos = glm::translate(v3Position);
+					m_pBall->SetModelMatrix(m4Pos * glm::scale(vector3(0.75f)));
+				}
+				if (data[num] == '3')
+				{
+					winCondition = vector3(-37.5 + (i * 5), 15, -37.5 + (j * 5));
+					std::cout << winCondition.x << " " << winCondition.y << " " << winCondition.z << std::endl;
+				}
+			}
+		}
+		return;
+	}
+	else
+	{
+		for (int i = 0; i < 45; i++)
+		{
+			for (int j = 0; j < 45; j++)
+			{
+				uint num = (45 * i) + j;
+				if (data[num] == '3')
+				{
+					m_pEntityMngr->AddEntity("baseCubeEnd.fbx", "baseEnd" + i + j);
+					vector3 v3Position = vector3(-112.5 + (i * 5), 10, -112.5 + (j * 5));
+					matrix4 m4Pos = glm::translate(v3Position);
+					m_pEntityMngr->SetModelMatrix(m4Pos * glm::scale(vector3(5.f)));
+				}
+				else
+				{
+					m_pEntityMngr->AddEntity("baseCube.fbx", "base_" + i + j);
+					vector3 v3Position = vector3(-112.5 + (i * 5), 10, -112.5 + (j * 5));
+					matrix4 m4Pos = glm::translate(v3Position);
+					m_pEntityMngr->SetModelMatrix(m4Pos * glm::scale(vector3(5.f)));
+				}
+			}
+		}
+
+		for (int i = 0; i < 45; i++)
+		{
+			for (int j = 0; j < 45; j++)
+			{
+				uint num = (45 * i) + j;
+				if (data[num] == '0')
+				{
+					m_pEntityMngr->AddEntity("cubeMesh.fbx");
+					vector3 v3Position = vector3(-112.5 + (i * 5), 15, -112.5 + (j * 5));
+					matrix4 m4Pos = glm::translate(v3Position);
+					m_pEntityMngr->SetModelMatrix(m4Pos * glm::scale(vector3(5.f)));
+				}
+
+				if (data[num] == '2')
+				{
+					m_pBall = new MyEntity("sphere.fbx");
+					m_pBall->UsePhysicsSolver(true);
+					vector3 v3Position = vector3(-112.5 + (i * 5), 15, -112.5 + (j * 5));
+					matrix4 m4Pos = glm::translate(v3Position);
+					m_pBall->SetModelMatrix(m4Pos * glm::scale(vector3(0.75f)));
+				}
+				if (data[num] == '3')
+				{
+					winCondition = vector3(-112.5 + (i * 5), 15, -112.5 + (j * 5));
+					std::cout << winCondition.x << " " << winCondition.y << " " << winCondition.z << std::endl;
+				}
+			}
+		}
+		return;
 	}
 }

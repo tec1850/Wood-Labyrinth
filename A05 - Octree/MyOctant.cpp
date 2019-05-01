@@ -92,6 +92,7 @@ MyOctant::MyOctant(uint a_nMaxLevel, uint a_nIdealEntityCount){
 	vector3 vHalfWidth = pRigidBody->GetHalfWidth();
 
 	float fmax = vHalfWidth.x;
+
 	for(size_t i = 0; i < 3; i++){
 		if(fmax < vHalfWidth[i]){
 			fmax = vHalfWidth[i];
