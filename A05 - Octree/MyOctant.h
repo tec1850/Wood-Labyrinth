@@ -98,6 +98,9 @@ namespace Simplex{
 		OUTPUT: Maximum in global space
 		*/
 		vector3 GetMaxGlobal(void);
+
+		std::vector<MyOctant*> GetOctantList(void);
+
 		/*
 		USAGE: Asks if there is a collision with the Entity specified by index from
 		the Bounding Object Manager
@@ -128,6 +131,13 @@ namespace Simplex{
 		OUTPUT: ---
 		*/
 		void DisplayLeafs(vector3 a_v3Color = C_YELLOW);
+		/*
+		USAGE: Return MyOctant with ID a_nIndex
+		ARGUMENTS:
+		- uint a_nIndex -> integer index to find
+		OUTPUT: MyOctant
+		*/
+		MyOctant* FindOctant(uint a_nIndex);
 		/*
 		USAGE: Clears the Entity list for each node
 		ARGUMENTS: ---

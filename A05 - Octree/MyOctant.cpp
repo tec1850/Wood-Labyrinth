@@ -167,6 +167,11 @@ vector3 MyOctant::GetMinGlobal(void){
 vector3 MyOctant::GetMaxGlobal(void){
 	return m_v3Max;
 }
+
+//WHY CAN'T I CALL THIS OUTSIDE THIS CPP??? C++ WHY ARE YOU LIKE THIS
+std::vector<MyOctant*> MyOctant::GetOctantList(void){
+	return m_lChild;
+}
 void Simplex::MyOctant::Display(uint a_nIndex, vector3 a_v3Color){
 	//displays wire cube
 	if (m_uID == a_nIndex) {
@@ -186,6 +191,20 @@ void MyOctant::Display(vector3 a_v3Color){
 	}
 	m_pMeshMngr->AddWireCubeToRenderList(glm::translate(IDENTITY_M4, m_v3Center) * glm::scale(vector3(m_fSize)), a_v3Color,RENDER_WIRE);
 }
+
+MyOctant* MyOctant::FindOctant(uint a_nIndex)
+{
+	if (m_uID == a_nIndex) {
+		return this;
+	}
+	else {
+		for (uint i = 0; i < m_uChildren; i++) {
+			return m_pChild[i]->FindOctant(a_nIndex);
+		}
+		return nullptr;
+	}
+}
+
 void MyOctant::Subdivide() {
 	//if node's reached max depth, return w/ no changes
 	if (m_uLevel >= m_uMaxLevel) {
