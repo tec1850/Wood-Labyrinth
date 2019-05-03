@@ -48,6 +48,7 @@ void Application::Update(void)
 	CameraRotation();
 
 	//Update Entity Manager
+	m_pRoot = new MyOctant(m_uOctantLevels, 5);
 	m_pEntityMngr->Update();
 	m_pBall->Update();
 
@@ -313,6 +314,7 @@ void Application::LoadLevel(int levelNum)
 				{
 					m_pEntityMngr->AddEntity("baseCubeEnd.fbx", "baseEnd" + i + j);
 					vector3 v3Position = vector3(-112.5 + (i * 5), 10, -112.5 + (j * 5));
+						m_pEntityMngr->AddEntity("sphere.fbx");
 					matrix4 m4Pos = glm::translate(v3Position);
 					m_pEntityMngr->SetModelMatrix(m4Pos * glm::scale(vector3(5.f)));
 				}
@@ -320,8 +322,9 @@ void Application::LoadLevel(int levelNum)
 				{
 					m_pEntityMngr->AddEntity("baseCube.fbx", "base_" + i + j);
 					vector3 v3Position = vector3(-112.5 + (i * 5), 10, -112.5 + (j * 5));
+						m_pEntityMngr->AddEntity("sphere.fbx");
 					matrix4 m4Pos = glm::translate(v3Position);
-					m_pEntityMngr->SetModelMatrix(m4Pos * glm::scale(vector3(5.f)));
+					m_pEntityMngr->SetModelMatrix(m4Pos * glm::scale(vector3(5.0f)));
 				}
 			}
 		}
